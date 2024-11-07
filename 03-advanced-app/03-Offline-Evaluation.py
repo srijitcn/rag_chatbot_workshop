@@ -57,6 +57,11 @@ active_deployment = next((item for item in active_deployments if item.model_name
 
 # COMMAND ----------
 
+experiment_tag = f"advanced_rag_chatbot"
+set_mlflow_experiment(experiment_tag)
+
+# COMMAND ----------
+
 from databricks.sdk import WorkspaceClient
 w = WorkspaceClient()
 print(active_deployment)

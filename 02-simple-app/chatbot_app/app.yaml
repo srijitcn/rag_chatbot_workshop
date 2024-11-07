@@ -1,0 +1,8 @@
+command:
+- uvicorn
+- main:app
+- --workers
+- '1'
+env:
+- name: MODEL_SERVING_ENDPOINT
+  value: agents_main-rag_chatbot_sri_nai_011-dbdemos_rag_demo

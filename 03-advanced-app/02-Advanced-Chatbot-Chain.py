@@ -28,6 +28,11 @@
 
 # COMMAND ----------
 
+experiment_tag = f"advanced_rag_chatbot"
+set_mlflow_experiment(experiment_tag)
+
+# COMMAND ----------
+
 rag_chain_config = {
     "databricks_resources": {
         "llm_endpoint_name": "databricks-dbrx-instruct",
