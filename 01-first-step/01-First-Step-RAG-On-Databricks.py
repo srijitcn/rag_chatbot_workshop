@@ -178,6 +178,12 @@ chain_config = {
 
 # COMMAND ----------
 
+#create an experiment
+experiment_tag = f"first_rag_chatbot"
+set_mlflow_experiment(experiment_tag)
+
+# COMMAND ----------
+
 from databricks.vector_search.client import VectorSearchClient
 from langchain_community.vectorstores import DatabricksVectorSearch
 from langchain.schema.runnable import RunnableLambda
