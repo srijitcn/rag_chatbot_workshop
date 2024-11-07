@@ -150,7 +150,7 @@ except:
 
 # COMMAND ----------
 
-app_name = f"rag-chatbot-app-{user_prefix.replace('_','-')}"
+app_name = f"chatbot-app-{user_prefix.replace('_','-')}"
 
 #Helper is defined in the _resources/02-lakehouse-app-helpers notebook (temporary helper)
 helper = LakehouseAppHelper()
