@@ -171,12 +171,16 @@ split_html_on_h2(html)
 @pandas_udf("array<string>")
 def parse_and_split(docs: pd.Series) -> pd.Series:
     return docs.apply(split_html_on_h2)
-    
-(spark.table("raw_documentation")
-      .filter('text is not null')
-      .withColumn('content', F.explode(parse_and_split('text')))
-      .drop("text")
-      .write.mode('overwrite').saveAsTable("databricks_documentation"))
+
+if not spark.catalog.tableExists("databricks_documentation") \
+    or spark.table("databricks_documentation").isEmpty():
+
+    (spark.table("raw_documentation")
+        .filter('text is not null')
+        .withColumn('content', F.explode(parse_and_split('text')))
+        .drop("text")
+        .write.mode('overwrite').saveAsTable("databricks_documentation"))
+
 
 display(spark.table("databricks_documentation"))
 
