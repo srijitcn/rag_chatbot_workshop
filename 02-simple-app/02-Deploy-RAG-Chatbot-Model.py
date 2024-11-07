@@ -255,8 +255,8 @@ wait_for_model_serving_endpoint_to_be_ready(deployment_info.endpoint_name)
 
 # COMMAND ----------
 
-#user_list = ["odl_instructor_1505865@databrickslabs.com"]
-user_list = ["srijit.nair@databricks.com"]
+user_list = ["odl_instructor_1505865@databrickslabs.com"] #Jesse
+#user_list = ["srijit.nair@databricks.com"]
 # Set the permissions.
 agents.set_permissions(model_name=MODEL_NAME_FQN, users=user_list, permission_level=agents.PermissionLevel.CAN_QUERY)
 

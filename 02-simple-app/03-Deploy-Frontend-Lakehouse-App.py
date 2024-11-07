@@ -43,7 +43,7 @@
 # COMMAND ----------
 
 MODEL_NAME = "dbdemos_rag_demo"
-endpoint_name = "agents_main-rag_chatbot_sri_nai_011-dbdemos_rag_demo"
+endpoint_name = f"agents_main-rag_chatbot_{user_prefix}-dbdemos_rag_demo"
 
 # Our frontend application will hit the model endpoint we deployed.
 # Because dbdemos let you change your catalog and database, let's make sure we deploy the app with the proper endpoint name
