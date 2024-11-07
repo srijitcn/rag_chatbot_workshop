@@ -372,5 +372,5 @@ mlflow_experiment_base_path = f"Users/{user_email}/mlflow_experiments"
 
 def set_mlflow_experiment(experiment_tag):
     dbutils.fs.mkdirs(f"file:/Workspace/{mlflow_experiment_base_path}")
-    experiment_path = f"/{mlflow_experiment_base_path}/{experiment_tag}"
+    experiment_path = f"/{mlflow_experiment_base_path}/{experiment_tag}_{user_prefix}"
     return mlflow.set_experiment(experiment_path)
