@@ -8,11 +8,13 @@ import re  # for nice rendering
 
 # Temp helper waiting for the python SDK to be updated with apps
 class LakehouseAppHelper:
+    
     def __init__(self):
         from databricks import sdk
 
         self.host = sdk.config.Config().host
         # self.host = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiUrl().getOrElse(None)
+        self.base_url = f"{self.host}/api/2.0/apps"
 
     def get_headers(self):
         from databricks import sdk
@@ -21,7 +23,7 @@ class LakehouseAppHelper:
 
     def list(self):
         json = requests.get(
-            f"{self.host}/api/2.0/preview/apps", headers=self.get_headers()
+            self.base_url, headers=self.get_headers()
         ).json()
 
         # now render it nicely
@@ -56,7 +58,7 @@ class LakehouseAppHelper:
 
     def create(self, app_name, app_description="This app does something"):
         result = requests.post(
-            f"{self.host}/api/2.0/preview/apps",
+            self.base_url,
             headers=self.get_headers(),
             json={"name": app_name, "spec": {"description": app_description}},
         ).json()
@@ -70,11 +72,11 @@ class LakehouseAppHelper:
         for _ in range(10):
             time.sleep(5)
             response = requests.get(
-                f"{self.host}/api/2.0/preview/apps/{app_name}",
+                f"{self.base_url}/{app_name}",
                 headers=self.get_headers(),
             ).json()
             print(response)
-            if response["status"]["state"] != "CREATING":
+            if response["app_status"]["state"] != "CREATING":
                 break
         return response
 
@@ -84,7 +86,7 @@ class LakehouseAppHelper:
             dependencies.extend(existing_dependencies) if existing_dependencies is not None else None
         
         result = requests.patch(
-            f"{self.host}/api/2.0/preview/apps/{app_name}",
+            f"{self.base_url}/{app_name}",
             headers=self.get_headers(),
             json={
                 "name": app_name,
@@ -98,18 +100,18 @@ class LakehouseAppHelper:
         for _ in range(10):
             time.sleep(5)
             response = requests.get(
-                f"{self.host}/api/2.0/preview/apps/{app_name}",
+                f"{self.base_url}/{app_name}",
                 headers=self.get_headers(),
             ).json()
             print(response)
-            if response["status"]["state"] != "CREATING":
+            if response["app_status"]["state"] != "CREATING":
                 break
         return response
 
     def deploy(self, app_name, source_code_path):
         # Deploy starts the pod, downloads the source code, install necessary dependencies, and starts the app.
         response = requests.post(
-            f"{self.host}/api/2.0/preview/apps/{app_name}/deployments",
+            f"{self.base_url}/{app_name}/deployments",
             headers=self.get_headers(),
             json={"source_code_path": source_code_path},
         ).json()
@@ -121,15 +123,17 @@ class LakehouseAppHelper:
         for _ in range(10):
             time.sleep(5)
             response = requests.get(
-                f"{self.host}/api/2.0/preview/apps/{app_name}/deployments/{deployment_id}",
+                f"{self.base_url}/{app_name}/deployments/{deployment_id}",
                 headers=self.get_headers(),
             ).json()
+
+            print(response)
             if response["status"]["state"] != "IN_PROGRESS":
                 break
         return response
 
     def get_app_details(self, app_name):
-        url = self.host + f"/api/2.0/preview/apps/{app_name}"
+        url = f"{self.base_url}/{app_name}"
         return requests.get(url, headers=self.get_headers()).json()
 
     def details(self, app_name):
@@ -149,7 +153,7 @@ class LakehouseAppHelper:
         displayHTML(html)
 
     def delete(self, app_name):
-        url = self.host + f"/api/2.0/preview/apps/{app_name}"
+        url = f"{self.base_url}/{app_name}"
         json = self.get_app_details(app_name)
         if "error_code" in json:
             print(f"App {app_name} doesn't exist {json}")
