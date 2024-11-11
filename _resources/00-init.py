@@ -368,9 +368,13 @@ def table_exists(table_name):
 # COMMAND ----------
 
 # DBTITLE 1,Set MLFlow experiment to a workspace directory
+import mlflow
+from databricks.sdk import WorkspaceClient
+
 mlflow_experiment_base_path = f"Users/{user_email}/mlflow_experiments"
 
 def set_mlflow_experiment(experiment_tag):
-    dbutils.fs.mkdirs(f"file:/Workspace/{mlflow_experiment_base_path}")
+    w = WorkspaceClient()
+    w.workspace.mkdirs(f"/Workspace/{mlflow_experiment_base_path}")
     experiment_path = f"/{mlflow_experiment_base_path}/{experiment_tag}_{user_prefix}"
     return mlflow.set_experiment(experiment_path)
